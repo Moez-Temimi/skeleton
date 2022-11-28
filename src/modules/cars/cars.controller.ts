@@ -33,21 +33,24 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { response } from 'express';
+import FindManyParams from 'src/common/schemas/find-many-params';
+import InsertManyCars from 'src/common/schemas/insert-manu-cars';
 
 @ApiTags('cars')
-// @ApiHeader({
-//   name: 'My Header',
-//   description: 'A Custom Header',
-// })
 // @UseGuards(AuthGuard('jwtStrategy'), RoleGuard)
 @Controller('cars')
 export class CarsController {
   constructor(private readonly service: CarsService) {}
 
+  // @Roles(Role.ADMIN)
+  @Post('insertCars')
+  insertCars(@Body() body: any) {
+    return this.service.insertCars(body);
+  }
   @Roles(Role.ADMIN)
   // @ApiResponse(ApiAcceptedResponse({status:201}))
   @Delete('delete/many')
-  deleteCarsByIds(@Body() payload: any) {
+  deleteCarsByIds(@Body() payload: FindManyParams) {
     return this.service.deleteCarsByIds(payload);
   }
   @Roles(Role.ADMIN)
@@ -57,36 +60,29 @@ export class CarsController {
   }
 
   // @Roles(Role.ADMIN)
-  @Get('/countcondition')
-  findReparedCarsAndCount(@Body() payload: any) {
-    return this.service.findReparedCarsAndCount(payload.isRepared);
-  }
-  // @Roles(Role.ADMIN)
   @Get('/findcount')
   findAndCountCars(@Body() payload: findAndCount) {
     return this.service.findAndCountCars(payload);
   }
-  @Roles(Role.ADMIN, Role.USER)
-  @Post()
-  addCar(@Body() body: CarDto) {
-    return this.service.addCar(body);
-  }
+  // @Roles(Role.ADMIN, Role.USER)
+  // @Post()
+  // addCar(@Body() body: CarDto) {
+  //   return this.service.addCar(body);
+  // }
 
   // @Roles(Role.ADMIN)
   @ApiCreatedResponse({ description: 'works' })
   @ApiBadRequestResponse({ description: 'yyeeey' })
   @Get()
-  async getAllCars(@Res({ passthrough: false }) response: any) {
+  async getAllCars(@Res({ passthrough: true }) response: any) {
     return await this.service.getAllCars();
   }
-
 
   // insert many
   // seeder => controller seed models 50 model
   // seeder create cars 150 random models
   // KPI center
-  // nomber of models, number of cars, number of cars in every model, number of cars in every model repared / unrepared
-  
+  // nomber of brands, number of cars, number of cars in every brand, number of cars in every brand repared / unrepared
 
   @Roles(Role.ADMIN)
   @Get('get/:id')
@@ -112,8 +108,18 @@ export class CarsController {
   }
   @Roles(Role.ADMIN)
   @Get('find/many')
-  findCarsByIds(@Body() payload: any) {
+  findCarsByIds(@Body() payload: FindManyParams) {
     return this.service.findCarsByIds(payload);
+  }
+  @Roles(Role.ADMIN)
+  @Get('findcarsbybrandandstate/stats')
+  getNbrOfCarsWithBrandAndState() {
+    return this.service.getNbrOfCarsWithBrandAndState();
+  }
+  @Roles(Role.ADMIN)
+  @Get('findcarsbybrand/stats')
+  getCarsWithBrand(@Body() state: any) {
+    return this.service.getCarsWithBrand(state);
   }
   @Roles(Role.ADMIN)
   @Get('find/stats')
@@ -147,8 +153,8 @@ export class CarsController {
   deleteCarOfTheUser(@Param() id: FindOneParam) {
     return this.service.deleteCarOfTheUser(id);
   }
-  @Roles(Role.USER)
-  @Delete('user/:id')
+  // @Roles(Role.USER)
+  @Delete('restAll')
   reset() {
     return this.service.reset();
   }

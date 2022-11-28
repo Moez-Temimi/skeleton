@@ -14,6 +14,8 @@ import UpdateCarState from 'src/common/schemas/update-state';
 import GetState from 'src/common/schemas/state';
 import { FindAllCarsSelector } from 'src/common/schemas/selector';
 import { FindRelation } from 'src/common/schemas/relations';
+import { brands } from 'brands.json ';
+import InsertManyCars from 'src/common/schemas/insert-manu-cars';
 
 @Injectable()
 export class CarsService {
@@ -21,9 +23,9 @@ export class CarsService {
     @InjectRepository(Car) private readonly carRepo: Repository<Car>,
   ) {}
 
-  public async addCar(body: CarDto) {
-    return this.carRepo.save(new Car(body));
-  }
+  // public async addCar(body: CarDto) {
+  //   return this.carRepo.save(new Car(body));
+  // }
 
   public async getAllCars() {
     const data = await this.carRepo.find({
@@ -77,19 +79,17 @@ export class CarsService {
     return await this.carRepo.delete(id);
   }
 
-  public async findCarsByIds(payload: any) {
-    console.log(payload);
+  public async findCarsByIds(payload: FindManyParams) {
+    const { ids } = payload;
     return await this.carRepo.findBy({
-      id: In(payload.id),
+      id: In(ids),
     });
   }
-  public async deleteCarsByIds(payload: any) {
-    console.log(payload);
-    return await this.carRepo.delete(payload.id);
+  public async deleteCarsByIds(payload: FindManyParams) {
+    const { ids } = payload;
+    return await this.carRepo.delete(ids);
   }
-  public async findReparedCarsAndCount(state: any) {
-    return await this.carRepo.findAndCountBy({ isRepared: state });
-  }
+
   async searchCar(args: SearchParam) {
     const { searchQuery, take, skip } = args;
 
@@ -133,5 +133,34 @@ export class CarsService {
   }
   public async reset() {
     return this.carRepo.clear();
+  }
+  public async getCarsWithBrand(brandOBJ: any) {
+    const {brand}=brandOBJ
+    return await this.carRepo
+      .createQueryBuilder('cars')
+      .leftJoinAndSelect('cars.brand', 'brand')
+      // .where('brand.name =:name', { name: brand })
+      .groupBy("brand.name")
+      // .getCount();
+    }
+    
+    public async getNbrOfCarsWithBrandAndState() {
+      return await this.carRepo
+      .createQueryBuilder('cars')
+      .leftJoinAndSelect('cars.brand', 'brand')
+      // .where('brand.name =:name', { name: brand })
+      // .andWhere('cars.isRepared =:state', { state: state })
+      .groupBy("brand.id")
+      // .getRawMany()
+      .getCount()
+      // return "hello"
+  }
+  public async insertCars(body: any) {
+    let { model, serialNum, brand, owner } = body;
+    model = 'any model';
+    serialNum = '666';
+    brand = brands[Math.floor(Math.random() * brands.length)].id;
+    owner = 'be1244b0-bbda-43d6-944e-8da053c3256f';
+    return await this.carRepo.save({ model, serialNum, brand, owner });
   }
 }

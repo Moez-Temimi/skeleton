@@ -9,9 +9,5 @@ export class UpdateCarDto {
 
   @ApiProperty({ type: 'string' })
   @IsOptional()
-  brandName: string;
-
-  @ApiProperty({ type: 'string' })
-  @IsOptional()
   serialNum: string;
 }

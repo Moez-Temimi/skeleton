@@ -4,8 +4,8 @@ import FindOneParam from 'src/common/schemas/find-one-param';
 import { encodedPassword } from 'src/common/utils/bcrypt';
 import { Repository } from 'typeorm';
 import { User } from '../../common/models/users.entity';
-import { FindUserDto } from './dto/Find-user-with-email';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { FindUserDto } from '../../common/schemas/Find-user-with-email';
+import { UpdateUserDto } from '../../common/schemas/update-user';
 import { UserDto } from './dto/users.dto';
 
 @Injectable()
@@ -35,8 +35,8 @@ export class UsersService {
   }
 
   updateUser(id: FindOneParam, body: UpdateUserDto) {
-    // if (body.password) body.password = encodedPassword(body.password);
-    return this.userRepo.upsert(body,[id.id]);
+    if (body.password) body.password = encodedPassword(body.password);
+    return this.userRepo.upsert(body, [id.id]);
   }
 
   deleteUser(id: FindOneParam) {

@@ -7,7 +7,7 @@ import { User } from 'src/common/models/users.entity';
 import { UserDto } from '../users/dto/users.dto';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Car, User, UserDto])],
+  imports: [TypeOrmModule.forFeature([Car])],
   providers: [CarsService],
   controllers: [CarsController],
 })

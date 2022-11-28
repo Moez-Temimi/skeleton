@@ -1,17 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { UserDto } from 'src/modules/users/dto/users.dto';
+import { Car } from 'src/common/models/cars.entity';
 
-export class CarDto {
+export class BrandDto {
   @ApiProperty({ type: 'string' })
   @IsNotEmpty()
   name: string;
 
   @ApiProperty({ type: 'string' })
   @IsNotEmpty()
-  cars: CarDto;
+  cars: Car;
 
-  @ApiProperty({ type: 'string' })
-  @IsNotEmpty()
-  owner: UserDto;
+  
 }

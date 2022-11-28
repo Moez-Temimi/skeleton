@@ -15,8 +15,10 @@ import { UserDto } from 'src/modules/users/dto/users.dto';
 import { UsersService } from './users.service';
 import { Role } from 'src/common/auth/enum/enum';
 import FindOneParam from 'src/common/schemas/find-one-param';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto } from '../../common/schemas/update-user';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
 @UseGuards(AuthGuard('jwtStrategy'), RoleGuard)
 @Controller('users')
 export class UsersController {

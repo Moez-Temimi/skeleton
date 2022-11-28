@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SignInCredentialsDto } from 'src/common/auth/dto/signIn.dto';
 import { User } from 'src/common/models/users.entity';
 import { comparePassword, encodedPassword } from '../utils/bcrypt';
-import { FindUserDto } from 'src/modules/users/dto/Find-user-with-email';
+import { FindUserDto } from 'src/common/schemas/Find-user-with-email';
 import { UserDto } from 'src/modules/users/dto/users.dto';
 import { UsersService } from 'src/modules/users/users.service';
 import { Repository } from 'typeorm';
